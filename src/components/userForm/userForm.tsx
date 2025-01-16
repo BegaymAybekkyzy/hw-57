@@ -1,39 +1,81 @@
+import { User, UserMutation } from '../../types';
+import * as React from 'react';
+import { useState } from 'react';
 
+interface Props {
+  onSubmitForm: (newUser: User) => void;
+}
 
-const UserForm = () => {
+const UserForm: React.FC<Props> = ({onSubmitForm}) => {
+  const [form, setForm] = useState<UserMutation>({
+    name: '',
+    email: '',
+    role: '',
+    active: false,
+  });
+
+  const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const {value, name} = e.target;
+    setForm(prevState => ({ ...prevState, [name]: value }));
+  };
+
+  const checkboxChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {name, checked} = e.target;
+    setForm(prevState => ({ ...prevState, [name]: checked }));
+  };
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmitForm({id: String(new Date().toISOString()), ...form});
+  };
+
   return (
-    <form className="form-control">
-      <label htmlFor="userName" className="form-label">Name</label>
+    <form className="form-control" onSubmit={onSubmit} >
+      <label htmlFor="name" className="form-label">Name</label>
       <input
         type="text"
-        name="userName"
+        name="name"
         className="form-control mb-3"
         id="userName"
+        value={form.name}
         placeholder="User name"
+        onChange={inputChangeHandler}
       />
 
-      <label htmlFor="'userEmail" className="form-label">Email address</label>
+      <label htmlFor="'email" className="form-label">Email address</label>
       <input
         type="text"
-        name="userEmail"
+        name="email"
         className="form-control mb-3"
         id="userEmail"
+        value={form.email}
         placeholder="email"
+        onChange={inputChangeHandler}
       />
 
       <div>
-        <label htmlFor="userRole" className="form-label me-2">User role</label>
-        <select id="userRole" className="me-4" name='userRole'>
-          <option>User</option>
-          <option>Admin</option>
-          <option>Editor</option>
+        <label htmlFor="role" className="form-label me-2">User role</label>
+        <select
+          id="role"
+          className="me-4"
+          name="role"
+          value={form.role}
+          onChange={inputChangeHandler}
+        >
+          <option value='' disabled={true}>Select role</option>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+          <option value="editor">Editor</option>
         </select>
 
-        <label htmlFor="userActive" className="form-check-label me-2">User active</label>
+        <label htmlFor="active" className="form-check-label me-2">User active</label>
         <input
           type="checkbox"
-          id="userActive"
+          id="active"
           className="form-check-input"
+          checked={form.active}
+          name="active"
+          onChange={checkboxChangeHandler}
         />
       </div>
 
