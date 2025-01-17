@@ -1,29 +1,35 @@
-import { useState } from 'react';
-import UserForm from './components/userForm/userForm.tsx';
-import { User } from './types';
-import Users from './components/Users/Users.tsx';
-import './App.css';
-
+import { useState } from "react";
+import UserForm from "./components/userForm/userForm.tsx";
+import { User } from "./types";
+import Users from "./components/Users/Users.tsx";
+import "./App.css";
 
 const App = () => {
   const [userList, setUserList] = useState<User[]>([]);
 
   const addUser = (newUser: User) => {
-    setUserList(prevState => [...prevState, newUser]);
+    setUserList((prevState) => [...prevState, newUser]);
   };
 
   return (
     <>
-      <div className="container pt-5 row row-cols-2">
-        <div>
-          <UserForm onSubmitForm={addUser} />
-        </div>
+      <div className="container  ">
+        <div className="pt-5 row row-cols-2">
+          <div className="">
+            <UserForm onSubmitForm={addUser} />
+          </div>
 
-        <div>
-          <Users userList={userList} />
+          <div>
+            {userList.length > 0 ? (
+              <Users userList={userList} />
+            ) : (
+              <div className="d-flex h-100 justify-content-center align-items-center">
+                <p>User list is empty</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-
     </>
   );
 };
